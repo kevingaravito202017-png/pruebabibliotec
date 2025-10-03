@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ libro.titulo }} - Biblioteca{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="breadcrumb">
+        <a href="{{ url_for('index') }}">Inicio</a> /
+        <a href="{{ url_for('buscar', categoria=libro.categoria) }}">{{ libro.categoria }}</a> /
+        <span>{{ libro.titulo }}</span>
+    </div>
+
+    <div class="detail-container animate-fade-in">
+        <div class="detail-image">
+            {% if libro.imagen_url %}
+                <img src="{{ libro.imagen_url }}" alt="{{ libro.titulo }}" class="detail-book-image">
+            {% else %}
+                <div class="detail-placeholder">
+                    <span class="detail-icon">📖</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="detail-info">
+            <span class="detail-category">{{ libro.categoria }}</span>
+            <h1 class="detail-title">{{ libro.titulo }}</h1>
+            <p class="detail-author">Por {{ libro.autores }}</p>
+
+            <div class="detail-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Referencia:</span>
+                    <span class="meta-value">{{ libro.referencia }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Páginas:</span>
+                    <span class="meta-value">{{ libro.num_paginas }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Disponibilidad:</span>
+                    <span class="meta-value {% if libro.cantidad_ejemplares > 0 %}available{% else %}unavailable{% endif %}">
+                        {{ libro.cantidad_ejemplares }} ejemplares disponibles
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Fecha de registro:</span>
+                    <span class="meta-value">{{ libro.created_at[:10] }}</span>
+                </div>
+            </div>
+
+            <div class="detail-actions">
+                <a href="{{ url_for('buscar', categoria=libro.categoria) }}" class="btn btn-secondary">
+                    Ver más de {{ libro.categoria }}
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-outline">
+                    Volver al inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

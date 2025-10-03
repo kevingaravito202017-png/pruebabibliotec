@@ -1,0 +1,11 @@
+{
+  "name": "biblioteca-poli",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "python app.py",
+    "build": "echo 'Flask app - no build needed' && exit 0",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {}
+}

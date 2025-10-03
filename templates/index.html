@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Biblioteca Politécnico Colombiano{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h2 class="hero-title animate-fade-in">Bienvenido a la Biblioteca</h2>
+        <p class="hero-subtitle animate-fade-in">Explora nuestra colección de libros y recursos académicos</p>
+        <div class="search-box animate-slide-up">
+            <form action="{{ url_for('buscar') }}" method="get" class="search-form">
+                <input type="text" name="q" placeholder="Buscar por título, autor o referencia..." class="search-input">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Categorías Disponibles</h2>
+        </div>
+        <div class="categories-grid">
+            {% for categoria in categorias %}
+            <a href="{{ url_for('buscar', categoria=categoria) }}" class="category-card animate-scale">
+                <div class="category-icon">📚</div>
+                <h3>{{ categoria }}</h3>
+                <p>Ver libros</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Libros Recientes</h2>
+        </div>
+        <div class="books-grid">
+            {% for libro in libros[:12] %}
+            <div class="book-card animate-fade-in">
+                <a href="{{ url_for('detalle_libro', libro_id=libro.id) }}" class="book-link">
+                    <div class="book-cover">
+                        {% if libro.imagen_url %}
+                            <img src="{{ libro.imagen_url }}" alt="{{ libro.titulo }}" class="book-image">
+                        {% else %}
+                            <div class="book-placeholder">
+                                <span class="book-icon">📖</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ libro.titulo }}</h3>
+                        <p class="book-author">{{ libro.autores }}</p>
+                        <span class="book-category">{{ libro.categoria }}</span>
+                        <div class="book-meta">
+                            <span class="book-pages">{{ libro.num_paginas }} páginas</span>
+                            <span class="book-stock {% if libro.cantidad_ejemplares > 0 %}available{% else %}unavailable{% endif %}">
+                                {{ libro.cantidad_ejemplares }} disponibles
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if libros|length > 12 %}
+        <div class="text-center" style="margin-top: 2rem;">
+            <a href="{{ url_for('buscar') }}" class="btn btn-secondary">Ver todos los libros</a>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card animate-scale">
+                <div class="stat-number">{{ libros|length }}</div>
+                <div class="stat-label">Títulos Disponibles</div>
+            </div>
+            <div class="stat-card animate-scale">
+                <div class="stat-number">{{ categorias|length }}</div>
+                <div class="stat-label">Categorías</div>
+            </div>
+            <div class="stat-card animate-scale">
+                <div class="stat-number">{{ libros | sum(attribute='cantidad_ejemplares') }}</div>
+                <div class="stat-label">Ejemplares Totales</div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

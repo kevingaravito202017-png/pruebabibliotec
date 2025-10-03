@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Libros - Biblioteca{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-page-header">
+        <h1 class="page-title">Buscar en la Biblioteca</h1>
+
+        <form action="{{ url_for('buscar') }}" method="get" class="search-filters">
+            <div class="filter-group">
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por título, autor o referencia..." class="filter-input">
+            </div>
+            <div class="filter-group">
+                <select name="categoria" class="filter-select">
+                    <option value="">Todas las categorías</option>
+                    {% for cat in categorias %}
+                    <option value="{{ cat }}" {% if cat == categoria %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a href="{{ url_for('buscar') }}" class="btn btn-outline">Limpiar</a>
+        </form>
+    </div>
+
+    {% if query or categoria %}
+    <div class="search-results-info">
+        <p>Mostrando {{ libros|length }} resultados
+            {% if query %} para "{{ query }}"{% endif %}
+            {% if categoria %} en {{ categoria }}{% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="books-grid">
+        {% if libros %}
+            {% for libro in libros %}
+            <div class="book-card animate-fade-in">
+                <a href="{{ url_for('detalle_libro', libro_id=libro.id) }}" class="book-link">
+                    <div class="book-cover">
+                        {% if libro.imagen_url %}
+                            <img src="{{ libro.imagen_url }}" alt="{{ libro.titulo }}" class="book-image">
+                        {% else %}
+                            <div class="book-placeholder">
+                                <span class="book-icon">📖</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ libro.titulo }}</h3>
+                        <p class="book-author">{{ libro.autores }}</p>
+                        <span class="book-category">{{ libro.categoria }}</span>
+                        <div class="book-meta">
+                            <span class="book-pages">{{ libro.num_paginas }} páginas</span>
+                            <span class="book-stock {% if libro.cantidad_ejemplares > 0 %}available{% else %}unavailable{% endif %}">
+                                {{ libro.cantidad_ejemplares }} disponibles
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <h2>No se encontraron resultados</h2>
+                <p>Intenta con otros términos de búsqueda o explora nuestras categorías</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Volver al inicio</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Login Admin - Biblioteca{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-container animate-fade-in">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="{{ url_for('static', filename='img/2.png') }}" alt="Politécnico" class="login-logo">
+                <h2>Panel de Administración</h2>
+                <p>Ingresa tus credenciales</p>
+            </div>
+
+            <form method="POST" class="login-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" id="username" name="username" required class="form-input" placeholder="admin">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" id="password" name="password" required class="form-input" placeholder="••••••">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+            </form>
+
+            <div class="login-footer">
+                <a href="{{ url_for('index') }}" class="btn btn-outline btn-block">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

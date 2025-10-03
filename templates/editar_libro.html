@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Libro - Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-header">
+        <h1 class="page-title">Editar Libro</h1>
+        <a href="{{ url_for('admin_panel') }}" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="form-container animate-fade-in">
+        <form method="POST" enctype="multipart/form-data" class="book-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="referencia" class="form-label required">Referencia</label>
+                    <input type="text" id="referencia" name="referencia" required class="form-input" value="{{ libro.referencia }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria" class="form-label required">Categoría</label>
+                    <input type="text" id="categoria" name="categoria" required class="form-input" value="{{ libro.categoria }}" list="categorias-list">
+                    <datalist id="categorias-list">
+                        <option value="Literatura">
+                        <option value="Tecnología">
+                        <option value="Ciencia">
+                        <option value="Historia">
+                        <option value="Filosofía">
+                        <option value="Matemáticas">
+                    </datalist>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="titulo" class="form-label required">Título</label>
+                <input type="text" id="titulo" name="titulo" required class="form-input" value="{{ libro.titulo }}">
+            </div>
+
+            <div class="form-group">
+                <label for="autores" class="form-label required">Autores</label>
+                <input type="text" id="autores" name="autores" required class="form-input" value="{{ libro.autores }}">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="num_paginas" class="form-label required">Número de Páginas</label>
+                    <input type="number" id="num_paginas" name="num_paginas" required min="1" class="form-input" value="{{ libro.num_paginas }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad_ejemplares" class="form-label required">Cantidad de Ejemplares</label>
+                    <input type="number" id="cantidad_ejemplares" name="cantidad_ejemplares" required min="0" class="form-input" value="{{ libro.cantidad_ejemplares }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="imagen" class="form-label">Cambiar Imagen de Portada</label>
+                {% if libro.imagen_url %}
+                <div class="current-image">
+                    <p class="form-help">Imagen actual:</p>
+                    <img src="{{ libro.imagen_url }}" alt="{{ libro.titulo }}" class="current-image-preview">
+                </div>
+                {% endif %}
+                <div class="file-input-wrapper">
+                    <input type="file" id="imagen" name="imagen" accept="image/*" class="file-input" onchange="previewImage(event)">
+                    <label for="imagen" class="file-input-label">
+                        <span id="file-name">Seleccionar nueva imagen...</span>
+                        <span class="file-input-button">Examinar</span>
+                    </label>
+                </div>
+                <small class="form-help">Dejar vacío para mantener la imagen actual</small>
+                <div id="image-preview" class="image-preview" style="display: none;">
+                    <img id="preview-img" src="" alt="Preview">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large">Actualizar Libro</button>
+                <a href="{{ url_for('admin_panel') }}" class="btn btn-outline btn-large">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    const fileName = document.getElementById('file-name');
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+
+    if (file) {
+        fileName.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        fileName.textContent = 'Seleccionar nueva imagen...';
+        preview.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}
